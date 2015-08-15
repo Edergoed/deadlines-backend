@@ -1,3 +1,4 @@
+.DS_Store
 /.bundle
 
 # Ignore the default SQLite database.
@@ -12,4 +13,3 @@
 doc/
 *.swp
 *~
-.DS_Store
