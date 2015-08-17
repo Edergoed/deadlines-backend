@@ -4,6 +4,6 @@ class ApiConstraints
 		@default = options[:default]
 	end
 	def matches?(req)
-		@default || req.headers['Accept'].include?("application/vnd.api_deadlines.v#{@version}")
+		@default || req.headers['Accept'].include?("application/vnd.deadlines.v#{@version}")
 	end
 end
