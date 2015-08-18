@@ -53,9 +53,13 @@ group :test do
 
   gem "rspec-rails"
   gem "factory_girl_rails"
-  gem 'ffaker'
+ 
   gem "shoulda-matchers"
 end
+
+group :development, :test do
+ gem 'ffaker'
+  end
 
 gem "devise"
 
