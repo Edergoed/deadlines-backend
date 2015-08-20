@@ -1,31 +1,44 @@
 require 'spec_helper'
 
-describe Api::V1::UsersController do
+describe Api::V1::ProductsController do
     describe "GET #show" do
-        before(:each) do 
-            @user = FactoryGirl.create :user
-            get :show, id: @user.id
+        before(:each) do
+            @product = FactoryGirl.create :product
+            get :show, id: @product.id
         end
 
         it "returns the information about a reporter on a hash" do
-            user_response = json_response
-            expect(user_response[:email]).to eql @user.email
+            product_response = json_response
+            expect(product_response[:title]).to eql @product.title
         end
 
         it { should respond_with 200 }
     end
+    describe "GET #index" do
+        before(:each) do
+            4.times { FactoryGirl.create :product }
+            get :index
+        end
 
+        it "returns 4 records from the database" do
+            products_response = json_response
+            expect(products_response[:products].length).to eq(4)
+        end
+
+        it { should respond_with 200 }
+    end
     describe "POST #create" do
-
         context "when is successfully created" do
             before(:each) do
-                @user_attributes = FactoryGirl.attributes_for :user
-                post :create, { user: @user_attributes }
+                user = FactoryGirl.create :user
+                @product_attributes = FactoryGirl.attributes_for :product
+                api_authorization_header user.auth_token
+                post :create, { user_id: user.id, product: @product_attributes }
             end
 
-            it "renders the json representation for the user record just created" do
-                user_response = json_response
-                expect(user_response[:email]).to eql @user_attributes[:email]
+            it "renders the json representation for the product record just created" do
+                product_response = json_response
+                expect(product_response[:title]).to eql @product_attributes[:title]
             end
 
             it { should respond_with 201 }
@@ -33,38 +46,40 @@ describe Api::V1::UsersController do
 
         context "when is not created" do
             before(:each) do
-                @invalid_user_attributes = { password: "12345678", password_confirmation: "12345678" }
-                post :create, { user: @invalid_user_attributes }
+                user = FactoryGirl.create :user
+                @invalid_product_attributes = { title: "Smart TV", price: "Twelve dollars" }
+                api_authorization_header user.auth_token
+                post :create, { user_id: user.id, product: @invalid_product_attributes }
             end
 
             it "renders an errors json" do
-                user_response = json_response
-                expect(user_response).to have_key(:errors)
+                product_response = json_response
+                expect(product_response).to have_key(:errors)
             end
 
             it "renders the json errors on whye the user could not be created" do
-                user_response = json_response
-                expect(user_response[:errors][:email]).to include "can't be blank"
+                product_response = json_response
+                expect(product_response[:errors][:price]).to include "is not a number"
             end
 
             it { should respond_with 422 }
         end
     end
-
     describe "PUT/PATCH #update" do
         before(:each) do
             @user = FactoryGirl.create :user
-            api_authorization_header @user.auth_token 
+            @product = FactoryGirl.create :product, user: @user
+            api_authorization_header @user.auth_token
         end
 
         context "when is successfully updated" do
             before(:each) do
-                patch :update, { id: @user.id, user: { email: "newmail@example.com" } }
+                patch :update, { user_id: @user.id, id: @product.id, product: { title: "An expensive TV" } }
             end
 
             it "renders the json representation for the updated user" do
-                user_response = json_response
-                expect(user_response[:email]).to eql "newmail@example.com"
+                product_response = json_response
+                expect(product_response[:title]).to eql "An expensive TV"
             end
 
             it { should respond_with 200 }
@@ -72,31 +87,20 @@ describe Api::V1::UsersController do
 
         context "when is not updated" do
             before(:each) do
-                patch :update, { id: @user.id, user: { email: "bademail.com" } }
+                patch :update, { user_id: @user.id, id: @product.id, product: { price: "two hundred" } }
             end
 
             it "renders an errors json" do
-                user_response = json_response
-                expect(user_response).to have_key(:errors)
+                product_response = json_response
+                expect(product_response).to have_key(:errors)
             end
 
             it "renders the json errors on whye the user could not be created" do
-                user_response = json_response
-                expect(user_response[:errors][:email]).to include "is invalid"
+                product_response = json_response
+                expect(product_response[:errors][:price]).to include "is not a number"
             end
 
             it { should respond_with 422 }
         end
-    end
-
-    describe "DELETE #destroy" do
-        before(:each) do
-            @user = FactoryGirl.create :user
-            api_authorization_header @user.auth_token 
-            delete :destroy, { id: @user.id }
-        end
-
-        it { should respond_with 204 }
-
     end
 end
