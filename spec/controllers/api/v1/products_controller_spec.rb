@@ -8,7 +8,7 @@ describe Api::V1::ProductsController do
         end
 
         it "returns the information about a reporter on a hash" do
-            product_response = json_response
+            product_response = json_response[:product]
             expect(product_response[:title]).to eql @product.title
         end
 
@@ -37,9 +37,10 @@ describe Api::V1::ProductsController do
             end
 
             it "renders the json representation for the product record just created" do
-                product_response = json_response
+                product_response = json_response[:product]
                 expect(product_response[:title]).to eql @product_attributes[:title]
             end
+
 
             it { should respond_with 201 }
         end
@@ -78,7 +79,7 @@ describe Api::V1::ProductsController do
             end
 
             it "renders the json representation for the updated user" do
-                product_response = json_response
+                product_response = json_response[:product]
                 expect(product_response[:title]).to eql "An expensive TV"
             end
 
@@ -102,5 +103,16 @@ describe Api::V1::ProductsController do
 
             it { should respond_with 422 }
         end
+    end
+
+    describe "DELETE #destroy" do
+        before(:each) do
+            @user = FactoryGirl.create :user
+            @product = FactoryGirl.create :product, user: @user
+            api_authorization_header @user.auth_token 
+            delete :destroy, { user_id: @user.id, id: @product.id }
+        end
+
+        it { should respond_with 204 }
     end
 end
