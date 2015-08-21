@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
 
 	has_many :products, dependent: :destroy
 
+	has_many :created_tasks,  :foreign_key=>"creator_id", :class_name => "Product"
+
 	def generate_authentication_token!
 		begin
 			self.auth_token = Devise.friendly_token

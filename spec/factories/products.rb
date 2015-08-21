@@ -3,6 +3,7 @@ FactoryGirl.define do
     title { FFaker::Product.product_name }
     price { rand() * 100 }
     published false
-    user
+    creator
+    editor
   end
 end
