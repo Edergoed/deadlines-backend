@@ -11,18 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150818151904) do
+ActiveRecord::Schema.define(version: 20150821202324) do
 
   create_table "products", force: :cascade do |t|
     t.string   "title",      limit: 255,                default: ""
     t.decimal  "price",                  precision: 10, default: 0
     t.boolean  "published",                             default: false
-    t.integer  "user_id",    limit: 4
+    t.integer  "creator_id", limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "editor_id",  limit: 255
   end
 
-  add_index "products", ["user_id"], name: "index_products_on_user_id", using: :btree
+  add_index "products", ["creator_id"], name: "index_products_on_creator_id", using: :btree
+  add_index "products", ["editor_id"], name: "index_products_on_editor_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "", null: false
