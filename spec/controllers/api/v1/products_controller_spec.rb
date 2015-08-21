@@ -15,7 +15,8 @@ describe Api::V1::ProductsController do
 
         it "has the user as a embeded object" do
             product_response = json_response[:product]
-            expect(product_response[:user][:email]).to eql @product.user.email
+            # include_json(results: { 2 => { id: 27, badges: ["day & night"] }})
+            expect(product_response[:user][0][:email]).to eql @product.user.email
         end
 
         it { should respond_with 200 }
@@ -56,7 +57,7 @@ describe Api::V1::ProductsController do
             it "returns just the products that belong to the user" do
                 products_response = json_response[:products]
                 products_response.each do |product_response|
-                    expect(product_response[:user][:email]).to eql @user.email
+                    expect(product_response[:user][0][:email]).to eql @user.email
                 end
             end
         end
