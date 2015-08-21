@@ -61,8 +61,6 @@ describe Api::V1::ProductsController do
                 end
             end
         end
-
-
     end
 
     describe "POST #create" do
@@ -85,73 +83,73 @@ describe Api::V1::ProductsController do
         context "when is not created" do
             before(:each) do
                 user = FactoryGirl.create :user 
-@invalid_product_attributes = { title: "Smart TV", price: "Twelve dollars" } #notice I'm not including the email
-api_authorization_header user.auth_token 
-post :create, { user_id: user.id, product: @invalid_product_attributes }
-end
+                @invalid_product_attributes = { title: "Smart TV", price: "Twelve dollars" }
+                api_authorization_header user.auth_token 
+                post :create, { user_id: user.id, product: @invalid_product_attributes }
+            end
 
-it "renders an errors json" do
-    product_response = json_response
-    expect(product_response).to have_key(:errors)
-end
+            it "renders an errors json" do
+                product_response = json_response
+                expect(product_response).to have_key(:errors)
+            end
 
-it "renders the json errors on whye the user could not be created" do
-    product_response = json_response
-    expect(product_response[:errors][:price]).to include "is not a number"
-end
+            it "renders the json errors on whye the user could not be created" do
+                product_response = json_response
+                expect(product_response[:errors][:price]).to include "is not a number"
+            end
 
-it { should respond_with 422 }
-end
-end
-
-describe "PUT/PATCH #update" do
-    before(:each) do
-        @user = FactoryGirl.create :user
-        @product = FactoryGirl.create :product, user: @user
-        api_authorization_header @user.auth_token 
+            it { should respond_with 422 }
+        end
     end
 
-    context "when is successfully updated" do
+    describe "PUT/PATCH #update" do
         before(:each) do
-            patch :update, { user_id: @user.id, id: @product.id, product: { title: "An expensive TV" } }
+            @user = FactoryGirl.create :user
+            @product = FactoryGirl.create :product, user: @user
+            api_authorization_header @user.auth_token 
         end
 
-        it "renders the json representation for the updated user" do
-            product_response = json_response[:product]
-            expect(product_response[:title]).to eql "An expensive TV"
+        context "when is successfully updated" do
+            before(:each) do
+                patch :update, { user_id: @user.id, id: @product.id, product: { title: "An expensive TV" } }
+            end
+
+            it "renders the json representation for the updated user" do
+                product_response = json_response[:product]
+                expect(product_response[:title]).to eql "An expensive TV"
+            end
+
+            it { should respond_with 200 }
         end
 
-        it { should respond_with 200 }
+        context "when is not updated" do
+            before(:each) do
+                patch :update, { user_id: @user.id, id: @product.id, product: { price: "two hundred" } }
+            end
+
+            it "renders an errors json" do
+                product_response = json_response
+                expect(product_response).to have_key(:errors)
+            end
+
+            it "renders the json errors on whye the user could not be created" do
+                product_response = json_response
+                expect(product_response[:errors][:price]).to include "is not a number"
+            end
+
+            it { should respond_with 422 }
+        end
     end
 
-    context "when is not updated" do
+    describe "DELETE #destroy" do
         before(:each) do
-            patch :update, { user_id: @user.id, id: @product.id, product: { price: "two hundred" } }
+            @user = FactoryGirl.create :user
+            @product = FactoryGirl.create :product, user: @user
+            api_authorization_header @user.auth_token 
+            delete :destroy, { user_id: @user.id, id: @product.id }
         end
 
-        it "renders an errors json" do
-            product_response = json_response
-            expect(product_response).to have_key(:errors)
-        end
-
-        it "renders the json errors on whye the user could not be created" do
-            product_response = json_response
-            expect(product_response[:errors][:price]).to include "is not a number"
-        end
-
-        it { should respond_with 422 }
+        it { should respond_with 204 }
     end
-end
-
-describe "DELETE #destroy" do
-    before(:each) do
-        @user = FactoryGirl.create :user
-        @product = FactoryGirl.create :product, user: @user
-        api_authorization_header @user.auth_token 
-        delete :destroy, { user_id: @user.id, id: @product.id }
-    end
-
-    it { should respond_with 204 }
-end
 
 end
