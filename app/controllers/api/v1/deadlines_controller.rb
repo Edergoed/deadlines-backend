@@ -43,10 +43,6 @@ class Api::V1::DeadlinesController < ApplicationController
 	private
 
 	def deadline_params
-		params.require(:deadline).permit(:title, :price, :published)
+		params.require(:deadline).permit(:title, :subject, :deadline, :class_id, :group_id, :content, :published)
 	end
-	def deadline_create_params
-		params.require(:deadline).permit(:title, :price, :published, :creator_id).merge(creator_id: current_user.id)
-	end
-
 end

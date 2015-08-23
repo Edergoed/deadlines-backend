@@ -35,7 +35,7 @@ describe User do
     end
 
     it "destroys the associated deadlines on self destruct" do
-      deadlines = @user.deadlines
+      deadlines = @user.created_deadlines
       @user.destroy
       deadlines.each do |deadline|
         expect(Deadline.find(deadline)).to raise_error ActiveRecord::RecordNotFound

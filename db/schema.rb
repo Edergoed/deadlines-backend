@@ -11,12 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150821222333) do
+ActiveRecord::Schema.define(version: 20150823132442) do
 
   create_table "deadlines", force: :cascade do |t|
-    t.string   "title",      limit: 255,                default: ""
-    t.decimal  "price",                  precision: 10, default: 0
-    t.boolean  "published",                             default: false
+    t.string   "title",      limit: 255,   default: ""
+    t.string   "subject",    limit: 255
+    t.datetime "deadline"
+    t.integer  "class_id",   limit: 4
+    t.integer  "group_id",   limit: 4
+    t.text     "content",    limit: 65535
+    t.boolean  "published",                default: false
     t.integer  "creator_id", limit: 4
     t.integer  "editor_id",  limit: 4
     t.datetime "created_at"
