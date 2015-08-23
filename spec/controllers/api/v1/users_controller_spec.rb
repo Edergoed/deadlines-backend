@@ -12,9 +12,14 @@ describe Api::V1::UsersController do
 			expect(user_response[:email]).to eql @user.email
 		end
 
-		it "has the deadline ids as an embeded object" do
+		it "has the created deadline ids as an embeded object" do
 			user_response = json_response[:user]
-			expect(user_response[:deadline_ids]).to eql []
+			expect(user_response[:created_deadline_ids]).to eql []
+		end
+
+		it "has the edited deadline ids as an embeded object" do
+			user_response = json_response[:user]
+			expect(user_response[:created_deadline_ids]).to eql []
 		end
 
 		it { should respond_with 200 }
