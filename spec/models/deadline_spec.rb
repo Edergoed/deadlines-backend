@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Product do
-  let(:product) { FactoryGirl.build :product }
-  subject { product }
+describe Deadline do
+  let(:deadline) { FactoryGirl.build :deadline }
+  subject { deadline }
 
   it { should respond_to(:title) }
   it { should respond_to(:price) }

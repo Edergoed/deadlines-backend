@@ -1,8 +1,8 @@
-class AddAndEditProduct < ActiveRecord::Migration
+class AddAndEditDeadline < ActiveRecord::Migration
 	def change
-		rename_column :products, :user_id, :creator_id
-		rename_index :products, :user_id, :creator_id
-		add_column :products, :editor_id, :integer
-		add_index :products, :editor_id
+		rename_column :deadlines, :user_id, :creator_id
+		rename_index :deadlines, :user_id, :creator_id
+		add_column :deadlines, :editor_id, :integer
+		add_index :deadlines, :editor_id
 	end
 end

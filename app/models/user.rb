@@ -7,9 +7,11 @@ class User < ActiveRecord::Base
 	
 	before_create :generate_authentication_token!
 
-	has_many :products, dependent: :destroy
+	#has_many :deadlines, dependent: :destroy
 
-	has_many :created_tasks,  :foreign_key=>"creator_id", :class_name => "Product"
+	#has_many :created_tasks,  :foreign_key=>"creator_id", :class_name => "Deadline"
+	has_many :created_deadlines,  :foreign_key=>"creator_id", :class_name => "Deadline"
+	has_many :edited_deadlines,  :foreign_key=>"editor_id", :class_name => "Deadline"
 
 	def generate_authentication_token!
 		begin
