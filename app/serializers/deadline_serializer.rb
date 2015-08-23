@@ -1,5 +1,5 @@
-class ProductSerializer < ActiveModel::Serializer
-	embed :ids, include: true
+class DeadlineSerializer < ActiveModel::Serializer
+	#embed :ids, include: true
 	attributes :id, :title, :price, :published, :creator, :editor
 	# has_one :user, :key => :creator, embed: :objects, serializer: ShortUserSerializer
 	# def creator

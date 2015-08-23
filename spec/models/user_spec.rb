@@ -18,7 +18,8 @@ describe User do
 	it { should allow_value('example@domain.com').for(:email) }
 	it { should validate_uniqueness_of(:auth_token)}
 
-	it { should have_many(:products) }
+	it { should have_many(:created_deadlines) }
+  it { should have_many(:edited_deadlines) }
 	
 	describe "#generate_authentication_token!" do
     it "generates a unique token" do
@@ -33,11 +34,11 @@ describe User do
       expect(@user.auth_token).not_to eql existing_user.auth_token
     end
 
-    it "destroys the associated products on self destruct" do
-      products = @user.products
+    it "destroys the associated deadlines on self destruct" do
+      deadlines = @user.deadlines
       @user.destroy
-      products.each do |product|
-        expect(Product.find(product)).to raise_error ActiveRecord::RecordNotFound
+      deadlines.each do |deadline|
+        expect(Deadline.find(deadline)).to raise_error ActiveRecord::RecordNotFound
       end
     end
   end
