@@ -1,4 +1,6 @@
 class Api::V1::SessionsController < ApplicationController
+
+  require 'auth_token'
   respond_to :json
 
   def create 
@@ -8,9 +10,10 @@ class Api::V1::SessionsController < ApplicationController
 
     if user.valid_password? user_password
       sign_in user, store: false
-      user.generate_authentication_token!
+      #user.generate_authentication_token!
+      token = AuthToken.issue_token({ user_id: user.id })
       user.save
-      render json: user, status: 200, location: [:api, user]
+      render json: token, status: 200, location: [:api, user]
     else
       render json: { errors: "Invalid email or password" }, status: 422
     end 
@@ -23,3 +26,4 @@ class Api::V1::SessionsController < ApplicationController
     head 204
   end
 end
+
