@@ -1,5 +1,5 @@
 class Api::V1::DeadlinesController < ApplicationController
-	before_action :authenticate_with_token!, only: [:create, :update, :destroy]
+	before_action :verify_jwt_token, only: [:create, :update, :destroy]
 	respond_to :json
 
 	def index
