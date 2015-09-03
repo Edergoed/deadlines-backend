@@ -11,7 +11,7 @@ class Api::V1::SessionsController < ApplicationController
     if user.valid_password? user_password
       #sign_in user, store: false
       #user.generate_authentication_token!
-      token = AuthToken.issue_token({ user_id: user.id })
+      token = AuthToken.issue_token({ id: user.id, email: user.email})
       user.save
       render json: {:token => token}, status: 200, location: [:api, user]
     else
