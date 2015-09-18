@@ -1,8 +1,6 @@
 class Api::V1::DeadlinesController < ApplicationController
-	require 'auth_token'
 	before_action :verify_jwt_token, only: [:create, :update, :destroy]
 	respond_to :json
-
 
 	def index
 		deadlines = params[:deadline_ids].present? ? Deadline.find(params[:deadline_ids]) : Deadline.all
