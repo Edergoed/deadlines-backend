@@ -11,8 +11,9 @@ ApiDeadlines::Application.routes.draw do
 			end
 			resources :sessions, :only => [:create, :destroy]
 			resources :deadlines, :only => [:show, :index]
+            get 'archive', :to => 'deadlines#archive'
 		end
 	end
 	#devise_for :users, controllers: {sessions: 'api/v1/sessions', registrations: 'api/v1/registrations'}
-	
+
 end

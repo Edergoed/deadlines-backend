@@ -9,6 +9,12 @@ class Api::V1::DeadlinesController < ApplicationController
         respond_with deadlines
     end
 
+    def archive
+        #deadlines = Deadlines.find_by_sql('SELECT * FROM deadlines WHERE deadline >= :homeDate ORDER BY deadline ASC')
+        deadlines = Deadline.all.where(['deadlineDateTime < ?', Time.new ]).order('deadlineDateTime desc')
+        respond_with deadlines
+    end
+
     def show
         respond_with Deadline.find(params[:id])
     end
