@@ -9,10 +9,7 @@ class Api::V1::SessionsController < ApplicationController
     user = user_email.present? && User.find_by(email: user_email) 
 
     if user.valid_password? user_password
-      #sign_in user, store: false
-      #user.generate_authentication_token!
       token = AuthToken.issue_token({ id: user.id, email: user.email})
-      user.save
       render json: {:token => token}, status: 200, location: [:api, user]
     else
       render json: { errors: "Invalid email or password" }, status: 422
@@ -20,7 +17,7 @@ class Api::V1::SessionsController < ApplicationController
   end
 
   def destroy
-    user = User.find_by(auth_token: params[:id])    
+    user = User.find_by_id(params[:id])    
     user.generate_authentication_token!
     user.save
     head 204
