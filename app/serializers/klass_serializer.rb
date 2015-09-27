@@ -1,6 +1,6 @@
-class DeadlineSerializer < ActiveModel::Serializer
+class KlassSerializer < ActiveModel::Serializer
 	#embed :ids, include: true
-	attributes :id, :title, :subject, :deadlineDateTime, :klass, :group_id, :content, :published, :creator, :editor
+	attributes :id, :name
 	# has_one :user, :key => :creator, embed: :objects, serializer: ShortUserSerializer
 	# def creator
 	# 	ShortUserSerializer.new(object.user, root: false)
