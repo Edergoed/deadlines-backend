@@ -22,7 +22,7 @@ class Api::V1::DeadlinesController < ApplicationController
 
     def create
         #this fixes a lot
-        deadline = Deadline.new(deadline_params.merge(creator_id: @current_user))
+        deadline = Deadline.new(deadline_params.merge(creator_id: @current_user, klass: User.find_by_id(@current_user).klass))
         # deadline = current_user.deadlines.build(deadline_params)
         if deadline.save
             render json: deadline, status: 201, location: [:api, deadline]
