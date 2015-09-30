@@ -13,9 +13,6 @@ class User < ActiveRecord::Base
 	has_many :created_deadlines,  :foreign_key=>"creator_id", :class_name => "Deadline"
 	has_many :edited_deadlines,  :foreign_key=>"editor_id", :class_name => "Deadline"
 
-	#def generate_authentication_token!
-	#	begin
-	#		self.auth_token = Devise.friendly_token
-	#	end while self.class.exists?(auth_token: auth_token)
-	#end
+	has_one :role
+	has_many :perms, :through => :roles
 end
