@@ -12,7 +12,8 @@ class Api::V1::SessionsController < ApplicationController
     if user.valid_password? user_password
       hash = Digest::MD5.hexdigest(user.email)
       gravatarUrl = "http://www.gravatar.com/avatar/#{hash}"
-      token = AuthToken.issue_token({ id: user.id, email: user.email, role: user.role, gravatar: gravatarUrl })
+      permissions = []
+      token = AuthToken.issue_token({ id: user.id, email: user.email, gravatar: gravatarUrl })
       render json: {:token => token}, status: 200, location: [:api, user]
     else
       render json: { errors: "Invalid email or password" }, status: 422
