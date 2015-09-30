@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
         token = request.headers['Authorization'].split(' ').last
         payload, header = AuthToken.valid?(token)
         @current_user = payload['id']
-        @current_user_permissions = User.find(pload['id']).perms
+        #@current_user_permissions = User.find(pload['id']).perms
     rescue
       render json: { error: 'Authorization header not valid'}, status: :unauthorized
     end
