@@ -13,6 +13,5 @@ class User < ActiveRecord::Base
 	has_many :created_deadlines,  :foreign_key=>"creator_id", :class_name => "Deadline"
 	has_many :edited_deadlines,  :foreign_key=>"editor_id", :class_name => "Deadline"
 
-	has_one :roles
 	has_many :perms, :through => :roles
 end
