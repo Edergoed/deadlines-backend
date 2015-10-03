@@ -3,15 +3,16 @@ class Api::V1::UsersController < ApplicationController
 	respond_to :json
 
 	def show
-		respond_with User.find(params[:id]) 
+		respond_with User.find(params[:id])
 	end
 
 	def create
-		user = User.new(user_params) 
-		if user.save
-			render json: user, status: 201, location: [:api, user] 
+		@user = User.new(user_params)
+		if @user.save
+            UserNotifier.send_signup_email(@user).deliver
+			render json: @user, status: 201, location: [:api, @user]
 		else
-			render json: { errors: user.errors }, status: 422
+			render json: { errors: @user.errors }, status: 422
 		end
 	end
 
@@ -19,7 +20,7 @@ class Api::V1::UsersController < ApplicationController
 		user = current_user
 
 		if user.update(user_params)
-			render json: user, status: 200, location: [:api, user] 
+			render json: user, status: 200, location: [:api, user]
 		else
 			render json: { errors: user.errors }, status: 422
 		end
@@ -33,6 +34,6 @@ class Api::V1::UsersController < ApplicationController
 	private
 
 	def user_params
-		params.require(:user).permit(:email, :password, :password_confirmation, :klass) 
+		params.require(:user).permit(:email, :password, :password_confirmation, :klass)
 	end
 end
