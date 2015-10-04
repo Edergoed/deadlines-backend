@@ -6,13 +6,13 @@ class Api::V1::DeadlinesController < ApplicationController
     def index
         #deadlines = Deadlines.find_by_sql('SELECT * FROM deadlines WHERE deadline >= :homeDate ORDER BY deadline ASC')
         #SELECT * FROM deadlines WHERE deadline_deadline >= :homeDate AND (deadline_class = :user_class OR deadline_group IN (SELECT group_id from groups_users WHERE user_id = :user_id)) ORDER BY deadline_deadline ASC'
-        deadlines = params[:deadline_ids].present? ? Deadline.find(params[:deadline_ids]) : Deadline.all.where(['deadlineDateTime >= ? AND klass = ?', Time.new, User.find_by_id(@current_user).klass]).order('deadlineDateTime ASC')
+        deadlines = Deadline.all.where(['deadlineDateTime >= ? AND klass = ?', Time.new, User.find_by_id(@current_user).klass]).order('deadlineDateTime ASC')
         respond_with deadlines
         #render json: { errors: User.find_by_id(@current_user)}, status: 422
     end
 
     def archive
-        deadlines = Deadline.all.where(['deadlineDateTime < ?', Time.new ]).order('deadlineDateTime DESC')
+        deadlines = Deadline.all.where(['deadlineDateTime < ? AND klass = ?', Time.new, User.find_by_id(@current_user).klass]).order('deadlineDateTime DESC')
         respond_with deadlines
     end
 
@@ -22,7 +22,8 @@ class Api::V1::DeadlinesController < ApplicationController
 
     def create
         #this fixes a lot
-        deadline = Deadline.new(deadline_params.merge(creator_id: @current_user, editor_id: nil, klass: User.find_by_id(@current_user).klass))
+
+        deadline = Deadline.new(deadline_params.merge(creator_id: @current_user, klass: User.find_by_id(@current_user).klass))
         # deadline = current_user.deadlines.build(deadline_params)
         if deadline.save
             render json: deadline, status: 201, location: [:api, deadline]
