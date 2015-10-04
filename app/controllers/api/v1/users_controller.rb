@@ -7,10 +7,12 @@ class Api::V1::UsersController < ApplicationController
 	end
 
 	def create
-		@user = User.new(user_params)
-		if @user.save
-            UserNotifier.send_signup_email(@user).deliver
-			render json: @user, status: 201, location: [:api, @user]
+
+		user = User.new(user_params)
+		if user.save
+            UserNotifier.send_signup_email(user).deliver
+            AdminNotifier.send_newuser(user).deliver
+			render json: user, status: 201, location: [:api, user]
 		else
 			render json: { errors: @user.errors }, status: 422
 		end

@@ -38,14 +38,21 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+
+  config.action_mailer.raise_delivery_errors = true
+
   config.action_mailer.perform_deliveries = true
+  
   config.action_mailer.smtp_settings = {
-    address:              'smtp.transip.email',
-    port:                 465,
-    domain:               'goededesigns.com',
-    user_name:            'deadlines@goededesigns.com',
-    password:             'Deadlines01',
-    authentication:       'plain',
-    enable_starttls_auto: true
+      :address              => "smtp.transip.email",
+      :port                 => 465,
+      :domain               => "goededesigns.com",
+      :user_name            => "deadlines@goededesigns.com",
+      :password             => "Deadlines01",
+      :authentication       => :plain,
+      :ssl                  => true,
+      :enable_starttls_auto => true
+
   }
 end
