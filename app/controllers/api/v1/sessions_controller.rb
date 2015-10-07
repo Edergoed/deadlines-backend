@@ -10,7 +10,7 @@ class Api::V1::SessionsController < ApplicationController
     user = user_email.present? && User.find_by(email: user_email)
 
     if user.valid_password? user_password
-      if user.active == 1
+      if user.active
         gravatarHash = Digest::MD5.hexdigest(user.email)
         permissions = []
         token = AuthToken.issue_token({ id: user.id, email: user.email, gravatar: gravatarHash })
