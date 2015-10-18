@@ -22,12 +22,16 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def update
-        user = current_user
+        user = User.find(params[:id])
 
-        if user.update(user_params)
-            render json: user, status: 200, location: [:api, user]
+        if user.id == @current_user.id
+            if user.update(user_params)
+                render json: user, status: 200, location: [:api, user]
+            else
+                render json: { errors: user.errors }, status: 422
+            end
         else
-            render json: { errors: user.errors }, status: 422
+            render json: { errors: 'No permisson' }, status: 422
         end
     end
 
@@ -50,7 +54,7 @@ class Api::V1::UsersController < ApplicationController
                 render json: { errors: user.errors }, status: 422
             end
         else
-            render json: { errors: 'Wrong activation token' }, status: 422
+            render json: { errors: 'Invalid activation token' }, status: 422
         end
     end
 
