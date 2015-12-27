@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'auth_token'
 
 describe Api::V1::UsersController do
 	describe "GET #show" do
@@ -64,7 +65,7 @@ describe Api::V1::UsersController do
 	describe "PUT/PATCH #update" do
 		before(:each) do
 			@user = FactoryGirl.create :user
-			api_authorization_header @user.auth_token 
+			api_authorization_header AuthToken.issue_token({ id: @user.id, firstname: @user.firstname, lastname: @user.lastname, email: @user.email })
 		end
 
 		context "when is successfully updated" do
@@ -102,7 +103,7 @@ describe Api::V1::UsersController do
 	describe "DELETE #destroy" do
 		before(:each) do
 			@user = FactoryGirl.create :user
-			api_authorization_header @user.auth_token 
+			api_authorization_header AuthToken.issue_token({ id: @user.id, firstname: @user.firstname, lastname: @user.lastname, email: @user.email })
 			delete :destroy, { id: @user.id }
 		end
 

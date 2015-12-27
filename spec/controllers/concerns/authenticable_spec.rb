@@ -1,4 +1,6 @@
 require 'spec_helper'
+require 'auth_token'
+require 'digest/md5'
 
 class Authentication
   include Authenticable
@@ -11,11 +13,16 @@ describe Authenticable do
   describe "#current_user" do
     before do
       @user = FactoryGirl.create :user
-      request.headers["Authorization"] = @user.auth_token
+
+      gravatarHash = Digest::MD5.hexdigest(@user.email)
+      request.headers["Authorization"] = AuthToken.issue_token({ id: @user.id, firstname: @user.firstname, lastname: @user.lastname, email: @user.email, gravatar: gravatarHash })
       authentication.stub(:request).and_return(request)
     end
     it "returns the user from the authorization header" do
-      expect(authentication.current_user.auth_token).to eql @user.auth_token
+      token = request.headers['Authorization'].split(' ').last
+        payload, header = AuthToken.valid?(token)
+        @current_user = User.find(payload['id'])
+      expect(@current_user.email).to eql @user.email
     end
   end
 

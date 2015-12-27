@@ -48,7 +48,9 @@ end
 
 group :test do
   gem "rspec-rails"
-  gem "shoulda-matchers"
+  #gem "shoulda-matchers"
+  gem 'shoulda-matchers', '~>2.6.2'
+  gem 'shoulda'
 end
 
 

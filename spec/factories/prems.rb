@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :prem do
+  factory :perm do
     
   end
 

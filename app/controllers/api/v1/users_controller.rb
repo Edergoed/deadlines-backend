@@ -37,7 +37,7 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def destroy
-        current_user.destroy
+        @current_user.destroy
         head 204
     end
 
@@ -56,6 +56,19 @@ class Api::V1::UsersController < ApplicationController
             end
         else
             render json: { errors: 'Invalid activation token' }, status: 422
+        end
+    end
+
+    def restpass
+        user = User.find_by(id: params[id])
+
+        if user.reset_token === params[:reset_token]
+            user = User.new(user_params)
+            if user.update(:reset_token => nil)
+                render json: { errors: 'Password is reset' }, status: 201
+            else
+                render json: { errors: 'Invalid activation token' }, status: 422
+            end
         end
     end
 

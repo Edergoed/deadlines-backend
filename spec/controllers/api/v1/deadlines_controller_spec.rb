@@ -1,22 +1,25 @@
 require 'spec_helper'
+require 'auth_token'
 
 describe Api::V1::DeadlinesController do
 
     describe "GET #show" do
-        before(:each) do 
-            @deadline = FactoryGirl.create :deadline
-            get :show, id: @deadline.id
-        end
+       before(:each) do 
+        user = FactoryGirl.create :user
+        api_authorization_header AuthToken.issue_token({ id: user.id, firstname: user.firstname, lastname: user.lastname, email: user.email })
+        @deadline = FactoryGirl.create :deadline
+        get :show, id: @deadline.id
+    end
 
-        it "returns the information about a reporter on a hash" do
-            deadline_response = json_response[:deadline]
-            expect(deadline_response[:title]).to eql @deadline.title
-        end
+    it "returns the information about a reporter on a hash" do
+        deadline_response = json_response[:deadline]
+        expect(deadline_response[:title]).to eql @deadline.title
+    end
 
-        it "has the user as a embeded object" do
-            deadline_response = json_response[:deadline]
+    it "has the user as a embeded object" do
+        deadline_response = json_response[:deadline]
             # include_json(results: { 2 => { id: 27, badges: ["day & night"] }})
-            expect(deadline_response[:creator][:email]).to eql @deadline.creator.email
+            expect(deadline_response[:creator][:id]).to eql @deadline.creator.id
         end
 
         it { should respond_with 200 }
@@ -24,6 +27,8 @@ describe Api::V1::DeadlinesController do
 
     describe "GET #index" do
         before(:each) do
+            user = FactoryGirl.create :user
+            api_authorization_header AuthToken.issue_token({ id: user.id, firstname: user.firstname, lastname: user.lastname, email: user.email })
             4.times { FactoryGirl.create :deadline } 
         end
 
@@ -50,14 +55,15 @@ describe Api::V1::DeadlinesController do
         context "when deadline_ids parameter is sent" do
             before(:each) do
                 @creator = FactoryGirl.create :creator
-                3.times { FactoryGirl.create :deadline, creator: @creator }
+            #api_authorization_header AuthToken.issue_token({ id: @creator.id, firstname: @creator.firstname, lastname: @creator.lastname, email: @creator.email })
+                4.times { FactoryGirl.create :deadline, creator: @creator }
                 get :index, deadline_ids: @creator.created_deadline_ids
             end
 
             it "returns just the deadlines that belong to the user" do
                 deadlines_response = json_response[:deadlines]
                 deadlines_response.each do |deadline_response|
-                    expect(deadline_response[:creator][:email]).to eql @creator.email
+                    expect(deadline_response[:creator][:id]).to eql @creator.id
                 end
             end
         end
@@ -68,7 +74,8 @@ describe Api::V1::DeadlinesController do
             before(:each) do
                 creator = FactoryGirl.create :creator
                 @deadline_attributes = FactoryGirl.attributes_for :deadline
-                api_authorization_header creator.auth_token 
+                #api_authorization_header creator.auth_token
+                api_authorization_header AuthToken.issue_token({ id: creator.id, firstname: creator.firstname, lastname: creator.lastname, email: creator.email })
                 post :create, { user_id: creator.id, deadline: @deadline_attributes }
             end
 
@@ -84,7 +91,8 @@ describe Api::V1::DeadlinesController do
             before(:each) do
                 creator = FactoryGirl.create :creator 
                 @invalid_deadline_attributes = { title: "Smart TV", price: "Twelve dollars" }
-                api_authorization_header creator.auth_token 
+                #api_authorization_header creator.auth_token
+                api_authorization_header AuthToken.issue_token({ id: creator.id, firstname: creator.firstname, lastname: creator.lastname, email: creator.email })
                 post :create, { user_id: creator.id, deadline: @invalid_deadline_attributes }
             end
 
@@ -106,7 +114,8 @@ describe Api::V1::DeadlinesController do
         before(:each) do
             @creator = FactoryGirl.create :creator
             @deadline = FactoryGirl.create :deadline, creator: @creator
-            api_authorization_header @creator.auth_token 
+            #api_authorization_header @creator.auth_token 
+            api_authorization_header AuthToken.issue_token({ id: @creator.id, firstname: @creator.firstname, lastname: @creator.lastname, email: @creator.email })
         end
 
         context "when is successfully updated" do
@@ -140,7 +149,8 @@ describe Api::V1::DeadlinesController do
         before(:each) do
             @creator = FactoryGirl.create :creator
             @deadline = FactoryGirl.create :deadline, creator: @creator
-            api_authorization_header @creator.auth_token 
+            #api_authorization_header @creator.auth_token
+            api_authorization_header AuthToken.issue_token({ id: @creator.id, firstname: @creator.firstname, lastname: @creator.lastname, email: @creator.email })
             delete :destroy, { user_id: @creator.id, id: @deadline.id }
         end
 
