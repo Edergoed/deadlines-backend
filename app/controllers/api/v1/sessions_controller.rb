@@ -19,7 +19,7 @@ class Api::V1::SessionsController < ApplicationController
                     else
                     token = AuthToken.issue_token({ id: user.id, firstname: user.firstname, prefix: user.prefix, lastname: user.lastname, email: user.email, gravatar: gravatarHash })
                     end
-                    render json: {:token => token}, status: 200, location: [:api, user]
+                    render json: { token: token}, status: 200, location: [:api, user]
                 else
                     render json: { errors: "Acount is disabled" }, status: 422
                 end

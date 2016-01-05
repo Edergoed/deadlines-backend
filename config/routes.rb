@@ -15,6 +15,7 @@ ApiDeadlines::Application.routes.draw do
             get 'archive', :to => 'deadlines#archive'
             post 'activate', :to => 'users#activate'
             get 'timetable', :to => 'timetable#index'
+            get 'test', :to => 'deadlines#test'
 		end
 	end
 	#devise_for :users, controllers: {sessions: 'api/v1/sessions', registrations: 'api/v1/registrations'}

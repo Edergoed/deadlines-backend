@@ -7,6 +7,10 @@ class Api::V1::DeadlinesController < ApplicationController
         deadlines = Deadline.all.where(['deadlineDateTime >= ? AND klass = ?', Time.new, @current_user.klass]).order('deadlineDateTime ASC')
         respond_with deadlines
     end
+    
+    def test
+        respond_with Deadline.search(params)
+    end
 
     def archive
         deadlines = Deadline.all.where(['deadlineDateTime < ? AND klass = ?', Time.new, @current_user.klass]).order('deadlineDateTime DESC')
