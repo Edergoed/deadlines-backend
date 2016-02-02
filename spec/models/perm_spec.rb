@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe Perm do
-	before { @klass = FactoryGirl.build(:klass) }
+	before { @perm = FactoryGirl.build(:perm) }
 
-	subject { @klass }
+	subject { @perm }
 
 	it { should respond_to(:name) }
 

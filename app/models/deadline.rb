@@ -5,5 +5,6 @@ class Deadline < ActiveRecord::Base
 	validates :deadlineDateTime, presence: true
 
 	belongs_to :creator, :foreign_key => "creator_id", :class_name => "User"
-	belongs_to :editor, :foreign_key => "editor_id", :class_name => "User"
+#has_and_belongs_to_many :students, :class_name => "User", :join_table => "schools_students", :association_foreign_key => "student_id"
+	has_and_belongs_to_many :editor, :association_foreign_key => "editor_id", :class_name => "User", :join_table => "deadlines_editors"
 end

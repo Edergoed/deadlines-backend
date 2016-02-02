@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
 
 	#has_many :created_tasks,  :foreign_key=>"creator_id", :class_name => "Deadline"
 	has_many :created_deadlines,  :foreign_key=>"creator_id", :class_name => "Deadline"
-	has_many :edited_deadlines,  :foreign_key=>"editor_id", :class_name => "Deadline"
+	has_and_belongs_to_many :edited_deadlines, :class_name => "Deadline",  :foreign_key=>"editor_id", :class_name => "Deadline", :join_table => "deadlines_editors"
 
 	has_many :perms, :through => :roles
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151104094212) do
+ActiveRecord::Schema.define(version: 20160201234147) do
 
   create_table "deadlines", force: :cascade do |t|
     t.string   "title",            limit: 255,   default: ""
@@ -29,6 +29,11 @@ ActiveRecord::Schema.define(version: 20151104094212) do
 
   add_index "deadlines", ["creator_id"], name: "index_deadlines_on_creator_id", using: :btree
   add_index "deadlines", ["editor_id"], name: "index_deadlines_on_editor_id", using: :btree
+
+  create_table "deadlines_editors", id: false, force: :cascade do |t|
+    t.integer "deadline_id", limit: 4
+    t.integer "editor_id",   limit: 4
+  end
 
   create_table "klasses", force: :cascade do |t|
     t.string   "name",       limit: 255, default: "", null: false

@@ -1,5 +1,12 @@
-require 'rails_helper'
+require 'spec_helper'
 
-RSpec.describe Role, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+describe Role do
+	before { @role = FactoryGirl.build(:role) }
+
+	subject { @role }
+
+	it { should respond_to(:name) }
+
+	it { should have_and_belong_to_many(:perms) }
 end
+
