@@ -37,10 +37,33 @@ class Api::V1::DeadlinesController < ApplicationController
     def update
 
         deadline = Deadline.find(params[:id])
-        if deadline.update(deadline_params.merge(editor_id: @current_user.id))
-            render json: deadline, status: 200, location: [:api, deadline]
+        editor = User.find(@current_user.id)
+        klasses = Klass.select(:id).where(id: params[:klass_ids])
+        klassCount = Klass.count
+        assignments = Assignment.select(:deadline_id, :klass_id).where(deadline_id: params[:id])
+        if deadline.update(deadline_params)
+            render json: {jaja: klasses}, status: 200, location: [:api, deadline]
         else
             render json: { errors: deadline.errors }, status: 422
+        end
+        deadline.deadline_edits.create(editor: editor)
+
+        #assingments.each do | assignment |
+        #klasses.each do | klass |
+        for assignment in assignments
+            for klass in 0..klassCount
+                if assignment['klass_id'] != klass
+                    assignment.destroy
+                end
+            end
+        end
+
+        for klass in klasses
+            for assignment in assignments
+                if assignment['klass_id'] != klass['id']
+                    deadline.assignments.create(klass: klass)
+                end
+            end
         end
     end
 
@@ -54,6 +77,7 @@ class Api::V1::DeadlinesController < ApplicationController
     private
 
     def deadline_params
+        params.permit(:klass_ids => [])
         params.require(:deadline).permit(:title, :subject, :deadlineDateTime, :group_id, :content, :published)
     end
 end
