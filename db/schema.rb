@@ -50,6 +50,11 @@ ActiveRecord::Schema.define(version: 20151104094212) do
   add_index "perms_roles", ["perm_id"], name: "index_roles_perms_on_perms_id", using: :btree
   add_index "perms_roles", ["role_id"], name: "index_roles_perms_on_roles_id", using: :btree
 
+  create_table "prems", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "roles", force: :cascade do |t|
     t.string   "name",       limit: 11
     t.datetime "created_at",            null: false
