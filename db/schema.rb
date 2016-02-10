@@ -21,10 +21,10 @@ ActiveRecord::Schema.define(version: 20160203164843) do
   end
 
   create_table "deadline_edits", force: :cascade do |t|
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
     t.integer  "deadline_id", limit: 4
     t.integer  "editor_id",   limit: 4
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
   end
 
   create_table "deadlines", force: :cascade do |t|
@@ -36,13 +36,13 @@ ActiveRecord::Schema.define(version: 20160203164843) do
     t.text     "content",          limit: 65535
     t.boolean  "published",                      default: false
     t.integer  "creator_id",       limit: 4
-    t.integer  "editor_id",        limit: 4
+    t.integer  "editor_id_nope",   limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "deadlines", ["creator_id"], name: "index_deadlines_on_creator_id", using: :btree
-  add_index "deadlines", ["editor_id"], name: "index_deadlines_on_editor_id", using: :btree
+  add_index "deadlines", ["editor_id_nope"], name: "index_deadlines_on_editor_id", using: :btree
 
   create_table "deadlines_editors", id: false, force: :cascade do |t|
     t.integer "deadline_id", limit: 4
