@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160203164843) do
+ActiveRecord::Schema.define(version: 20160210134857) do
 
   create_table "assignments", force: :cascade do |t|
     t.integer  "deadline_id", limit: 4
@@ -52,12 +52,6 @@ ActiveRecord::Schema.define(version: 20160203164843) do
   create_table "deadlines_klasses", id: false, force: :cascade do |t|
     t.integer "deadline_id", limit: 4
     t.integer "klass_id",    limit: 4
-  end
-
-  create_table "klasses", force: :cascade do |t|
-    t.string   "name",       limit: 255, default: "", null: false
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
   end
 
   create_table "perms", force: :cascade do |t|
