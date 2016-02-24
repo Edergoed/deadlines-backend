@@ -39,8 +39,9 @@ class Api::V1::DeadlinesController < ApplicationController
         deadline = Deadline.find(params[:id])
         editor = User.find(@current_user.id)
         klasses = Klass.select(:id).where(id: params[:klass_ids])
-        allKlasses = Klass.where.not(id: params[:klass_ids])
+        unselectedKlasses = Klass.where.not(id: params[:klass_ids])
         assignments = Assignment.all.where(deadline_id: params[:id])
+
         if deadline.update(deadline_params)
             render json: {jaja: klasses}, status: 200, location: [:api, deadline]
         else
@@ -48,10 +49,8 @@ class Api::V1::DeadlinesController < ApplicationController
         end
         deadline.deadline_edits.create(editor: editor)
 
-        #assingments.each do | assignment |
-        #klasses.each do | klass |
         for assignment in assignments
-            for klass in allKlasses
+            for klass in unselectedKlasses
                 if assignment['klass_id'] != klass
                     assignment.destroy
                 end
