@@ -1,5 +1,5 @@
 class UserNotifier < ActionMailer::Base
-      default :from => 'no-reply@goededesigns.com'
+      default :from => 'admin@deadlinesapp.io'
 
         # send a signup email to the user, pass in the user object that   contains the user's email address
       def send_signup_email(user, activation_token)

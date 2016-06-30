@@ -9,11 +9,9 @@ class User < ActiveRecord::Base
 
 	#has_many :deadlines, dependent: :destroy
 
-	#has_many :created_tasks,  :foreign_key=>"creator_id", :class_name => "Deadline"
 	has_many :created_deadlines,  :foreign_key=>"creator_id", :class_name => "Deadline"
-	#has_many :edited_deadlines, :class_name => "Deadline",  :foreign_key=>"editor_id", :class_name => "Deadline", :join_table => "deadlines_editors"
-    has_many :deadline_edits
-	has_many :edited_deadlines, :class_name => "Deadline",  :foreign_key=>"editor_id", :class_name => "Deadline", :through => :deadlines_editors
+    has_many :deadline_edits, foreign_key: 'editor_id'
+    has_many :edited_deadlines, through: :deadline_edits, source: :deadline
 
 	has_many :perms, :through => :roles
 end
