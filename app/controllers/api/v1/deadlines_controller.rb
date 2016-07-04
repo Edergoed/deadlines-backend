@@ -24,14 +24,24 @@ class Api::V1::DeadlinesController < ApplicationController
 
     def create
         deadline = Deadline.new(deadline_params.merge(creator_id: @current_user.id))
-        klass = Klass.find(@current_user.klass)
+
+        #klass = Klass.find(@current_user.klass)
         #Deadline.klasses << k
+        # klasses = Klass.select(:id).where(id: params[:klass_ids])
         if deadline.save
-            render json: deadline, status: 201, location: [:api, deadline]
+            render json: {Message: "etst" }, status: 201, location: [:api, deadline]
         else
             render json: { errors: deadline.errors}, status: 422
         end
-        deadline.assignments.create(klass: klass)
+        # params(:klass_ids).each do |assingment|
+        #     #parent.children.create (:child_name => 'abc')
+        #     deadline.assignments.create(klass_id: assingment);
+        # end
+
+        deadline.klasses << Klass.select(:id).where(id: params[:klass_ids])
+        # deadline.assignments.create(klass_id: params[:klasses]);
+        #deadline.assignments.create(klass: klass)
+
     end
 
     def update
@@ -74,7 +84,8 @@ class Api::V1::DeadlinesController < ApplicationController
     private
 
     def deadline_params
-        params.permit(:klass_ids => [])
+        #params.permit(:klass_ids => [])
+        params.require(:deadline).permit(:klass_ids => [])
         params.require(:deadline).permit(:title, :subject, :deadlineDateTime, :group_id, :content, :published)
     end
 end
