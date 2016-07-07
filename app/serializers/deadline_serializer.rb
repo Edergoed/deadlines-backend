@@ -5,7 +5,8 @@ class DeadlineSerializer < ActiveModel::Serializer
 	attributes :id, :title, :subject, :deadlineDateTime, :group_id, :content, :published
 	has_one :creator, :key => :creator, embed: :objects, serializer: ShortUserSerializer
 	has_many :editors, :through => :deadline_edits, :foreign_key => "editor_id", :source => :deadlines, :key => :editors, embed: :objects, serializer: ShortUserSerializer
-	has_many :klasses, :through => :assignments, embed: :ids
+	# has_many :klasses, :through => :assignments, embed: :ids
+	has_many :klasses, through: :assignments, embed: :ids
 	#def creator
 	#	ShortUserSerializer.new(object.creator, root: false)
 	#end

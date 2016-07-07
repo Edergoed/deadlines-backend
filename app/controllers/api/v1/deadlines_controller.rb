@@ -29,7 +29,7 @@ class Api::V1::DeadlinesController < ApplicationController
         #Deadline.klasses << k
         # klasses = Klass.select(:id).where(id: params[:klass_ids])
         if deadline.save
-            render json: {Message: "etst" }, status: 201, location: [:api, deadline]
+            render json: {Message: "Added new deadline succesfully" }, status: 201, location: [:api, deadline]
         else
             render json: { errors: deadline.errors}, status: 422
         end
@@ -45,32 +45,31 @@ class Api::V1::DeadlinesController < ApplicationController
     end
 
     def update
-
         deadline = Deadline.find(params[:id])
         editor = User.find(@current_user.id)
-        klasses = Klass.select(:id).where(id: params[:klass_ids])
-        unselectedKlasses = Klass.where.not(id: params[:klass_ids])
+        unselectedKlasses = Assignment.select(:id).where(deadline_id: deadline['id']).where.not(klass_id: params[:klass_ids]).collect(&:id)
         assignments = Assignment.all.where(deadline_id: params[:id])
 
+        deadline.update(deadline_params)
         if deadline.update(deadline_params)
-            render json: {jaja: klasses}, status: 200, location: [:api, deadline]
+            render json: {Message: "Updated deadline succesfully"}, status: 200, location: [:api, deadline]
         else
             render json: { errors: deadline.errors }, status: 422
         end
         deadline.deadline_edits.create(editor: editor)
 
-        for assignment in assignments
-            for klass in unselectedKlasses
-                if assignment['klass_id'] != klass
-                    assignment.destroy
+        Assignment.delete(unselectedKlasses);
+
+        for klass in params[:klass_ids]
+            bool = true
+            for assignment in assignments
+                if klass == assignment['klass_id']
+                    bool = false
                 end
             end
-        end
-
-        for klass in klasses
-                if assignment['klass_id'] != klass
-                    deadline.assignments.create(klass: Klass.find(klass))
-                end
+            if bool
+                deadline.klasses << Klass.find(klass)
+            end
         end
     end
 
