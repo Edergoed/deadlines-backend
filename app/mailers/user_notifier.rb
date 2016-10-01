@@ -8,4 +8,10 @@ class UserNotifier < ActionMailer::Base
           mail( :to => @user.email,
                :subject => 'Thanks for signing up for Deadlines' )
       end
+      def send_reset_email(user, activation_token)
+          @user = user
+          @activation_token = activation_token
+          mail( :to => @user.email,
+               :subject => 'Password reset' )
+      end
 end

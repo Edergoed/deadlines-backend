@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>You requested a password reset <%= @user.email %>!</h1>
+    <p>You can do this a following this link</p>
+	<a href="https://deadlinesapp.io/activate/<%= @activation_token %>" ><h2>Activate</h2></a>
+    <p>Did you not request for this contact us as soon as posibble.</p>
+  </body>
+</html>

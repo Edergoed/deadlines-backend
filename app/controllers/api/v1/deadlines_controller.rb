@@ -18,6 +18,18 @@ class Api::V1::DeadlinesController < ApplicationController
         respond_with deadlines
     end
 
+    def latest
+        #deadlines = Deadline.all.where(['deadlineDateTime >= ? AND klass = ?', Time.new, @current_user.klass]).order('deadlineDateTime ASC')
+        deadlines = Deadline.joins(:klasses).all.where(['deadlineDateTime >= ? AND klass_id = ?', Time.new, @current_user.klass]).order('deadlineDateTime ASC Limit 1')
+        respond_with deadlines
+    end
+
+    def lastarchive
+        #deadlines = Deadline.all.where(['deadlineDateTime >= ? AND klass = ?', Time.new, @current_user.klass]).order('deadlineDateTime ASC')
+        deadlines = Deadline.joins(:klasses).all.where(['deadlineDateTime < ? AND klass_id = ?', Time.new, @current_user.klass]).order('deadlineDateTime DESC Limit 1')
+        respond_with deadlines
+    end
+
     def show
         respond_with Deadline.find(params[:id])
     end
@@ -85,6 +97,6 @@ class Api::V1::DeadlinesController < ApplicationController
     def deadline_params
         #params.permit(:klass_ids => [])
         params.require(:deadline).permit(:klass_ids => [])
-        params.require(:deadline).permit(:title, :subject, :deadlineDateTime, :group_id, :content, :published)
+        params.require(:deadline).permit(:title, :subject, :deadlineDateTime, :group_id, :content, :published, )
     end
 end

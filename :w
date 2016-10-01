@@ -14,12 +14,12 @@ ApiDeadlines::Application.routes.draw do
 			resources :klasses, :only => [:show, :index]
             get 'archive', :to => 'deadlines#archive'
             post 'activate', :to => 'users#activate'
-            post 'reset', :to => 'users#reset'
             get 'timetable', :to => 'timetable#index'
             get 'test', :to => 'deadlines#test'
             get 'latest', :to => 'deadlines#latest'
-            get 'archive/latest', :to => 'deadlines#archivelatest'
+            # get 'archive/latest', :to => 'deadlines#latest'
 		end
 	end
 	#devise_for :users, controllers: {sessions: 'api/v1/sessions', registrations: 'api/v1/registrations'}
+
 end
