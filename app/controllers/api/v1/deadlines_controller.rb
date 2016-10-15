@@ -24,18 +24,18 @@ class Api::V1::DeadlinesController < ApplicationController
 
     def create
         deadline = Deadline.new(deadline_params.merge(creator_id: @current_user.id))
-        klass = Klass.find(@current_user.klass)
+        # klass = Klass.find(@current_user.klass)
+        klasses = Klass.select(:id).where(id: params[:klass_ids])
         #Deadline.klasses << k
         if deadline.save
             render json: deadline, status: 201, location: [:api, deadline]
         else
             render json: { errors: deadline.errors}, status: 422
         end
-        deadline.assignments.create(klass: klass)
+        deadline.assignments.create(klass: klasses)
     end
 
     def update
-
         deadline = Deadline.find(params[:id])
         editor = User.find(@current_user.id)
         klasses = Klass.select(:id).where(id: params[:klass_ids])
@@ -58,9 +58,9 @@ class Api::V1::DeadlinesController < ApplicationController
         end
 
         for klass in klasses
-                if assignment['klass_id'] != klass
-                    deadline.assignments.create(klass: Klass.find(klass))
-                end
+            if assignment['klass_id'] != klass
+                deadline.assignments.create(klass: Klass.find(klass))
+            end
         end
     end
 
